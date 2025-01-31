@@ -1,20 +1,24 @@
 {
-    "manifest_version": 3,
-    "name": "LinkedIn Email Finder",
-    "version": "1.0.0",
-    "permissions": [
-        "scripting",
-        "activeTab",
-        "tabs"
-    ],
-    "background": {
-        "service_worker": "serviceWorker.js",
-        "type": "module"
-    },
-    "action": {
-        "default_popup": "index.html"
-    },
-    "host_permissions": [
-        "https://www.linkedin.com/*"
-    ]
+  "manifest_version": 3,
+  "name": "caret",
+  "version": "1.0.0",
+  "permissions": ["scripting", "activeTab", "tabs", "storage", "sidePanel"],
+  "background": {
+    "service_worker": "serviceWorker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "index.html"
+  },
+  "host_permissions": ["<all_urls>"],
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_start"
+    }
+  ]
 }
