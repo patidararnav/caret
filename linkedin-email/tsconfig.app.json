@@ -1,29 +1,22 @@
 {
   "compilerOptions": {
-    "types": ["vite/client", "@types/chrome"],
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "incremental": true,
+    "types": ["node", "chrome"],
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "moduleResolution": "Node", // Use Node for Chrome extension compatibility
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    /* Output */
-    "outDir": "dist", // Emit compiled files to the dist folder
-    "allowJs": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-
-    /* JSX Support */
+    "isolatedModules": true,
+    "noEmit": true,
     "jsx": "react-jsx",
-
-    /* Strictness */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "public/scripts"],
-  "exclude": ["node_modules"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
