@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Popup.css";
 import sendIcon from "../../assets/send_button.png";
 import caretLogo from "../../assets/caretlogo.png";
@@ -52,6 +52,20 @@ const Popup: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleHighlightChange = (request: any) => {
+      if (request.action === "ASK_CARET" && request.data?.text) {
+        console.log("Received 'ASK_CARET' message with text:", request.data.text);
+        setInputText(prev => `${prev} ${request.data.text}`.trim());
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(handleHighlightChange);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleHighlightChange);
+    };
+  }, []);
 
   return (
     <div className="popup">

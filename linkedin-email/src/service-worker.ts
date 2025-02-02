@@ -48,3 +48,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   return true;
 });
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "ask-caret",
+    title: "Ask Caret",
+    contexts: ["selection"]
+  });
+});
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "ask-caret" && info.selectionText && tab?.id) {
+    chrome.sidePanel.open({ windowId: tab.windowId });
+    // Add a small delay to ensure side panel is open before sending message
+    await new Promise(resolve => setTimeout(resolve, 150));
+    console.log("Sending 'ASK_CARET' message with text:", info.selectionText);
+    chrome.tabs.sendMessage(tab.id, {
+      action: "ASK_CARET",
+      data: { text: info.selectionText }
+    });
+  }
+});
