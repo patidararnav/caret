@@ -268,4 +268,77 @@
 .clear-text-button:hover {
   color: #fff;
   background-color: rgba(255, 255, 255, 0.1);
+ 
+.message-content strong {
+  font-weight: bold;
+}
+
+.message-content em {
+  font-style: italic;
+}
+
+.message-content p {
+  margin: 0;
+}
+
+.message-content ul,
+.message-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+  list-style-position: outside;
+}
+
+.message-content ul {
+  list-style-type: disc;
+}
+
+.message-content ol {
+  list-style-type: decimal;
+}
+
+.message-content li {
+  margin: 4px 0;
+}
+
+.message-content code {
+  background-color: #1a1a1a;
+  color: #00ff9d;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+.message-content .katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+}
+
+.message-content .katex {
+  font-size: 1.1em;
+  color: #00ff9d;
+}
+
+.message-content .katex-inline {
+  display: inline-block;
+  padding: 0 0.2em;
+}
+
+.message-content .katex-display > .katex {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.message-content .katex-display > .katex > .katex-html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+  max-width: 100%;
 }
