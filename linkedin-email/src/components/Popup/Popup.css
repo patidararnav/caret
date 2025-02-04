@@ -6,7 +6,8 @@
   flex-direction: column;
   background-color: #1a1a1a;
   color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
   position: fixed;
   top: 0;
   left: 0;
@@ -91,12 +92,38 @@
   color: #1a1a1a;
 }
 
-.input-form {
-  padding: 1rem;
+.bottom-container {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  background-color: #2a2a2a;
+  padding: 1rem 0;
+}
+
+.selected-text-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  max-height: 150px;
+  overflow-y: auto;
+  margin: 4px 16px;
+}
+
+.selected-text-content {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  font-style: italic;
+  font-family: "Iowan Old Style", Palatino, "Palatino Linotype",
+    "Palatino LT STD", serif;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.input-form {
+  padding: 0.25rem 1rem 1rem 1rem;
+  display: flex;
   border-top: 1px solid #2a2a2a;
-  background-color: #1e2124;
   position: relative;
 }
 
@@ -123,9 +150,10 @@
 }
 
 .send-button {
-  position: absolute;
-  right: 1.4rem;
-  bottom: 1.4rem;
+  position: relative;
+  right: 40px;
+  align-self: flex-end;
+  margin-bottom: 8px;
   background-color: #00ff9d;
   color: #1a1a1a;
   border: none;
@@ -176,7 +204,8 @@
 }
 
 @keyframes typing {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -194,4 +223,23 @@
   opacity: 0.7;
   cursor: not-allowed;
   background-color: #888;
+}
+
+/* customize scrollbar for the container */
+.selected-text-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.selected-text-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.selected-text-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.selected-text-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }

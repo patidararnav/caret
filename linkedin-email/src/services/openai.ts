@@ -1,8 +1,8 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Note: In production, you should use a backend server
+  dangerouslyAllowBrowser: true, // Note: In production, you should use a backend server
 });
 
 interface Message {
@@ -10,15 +10,23 @@ interface Message {
   content: string;
 }
 
-export const generateResponse = async (message: string, conversationHistory: Message[] = []): Promise<string> => {
+export const generateResponse = async (
+  message: string,
+  selectedText: string,
+  conversationHistory: Message[] = []
+): Promise<string> => {
   try {
     const messages: Message[] = [
-      { 
-        role: "system", 
-        content: "You are Caret, a helpful AI assistant. You are knowledgeable, friendly, and concise in your responses." 
+      {
+        role: "system",
+        content: `You are Caret, a helpful AI assistant. You are knowledgeable, friendly, and concise in your responses. ${
+          selectedText
+            ? `You are given a selected text from the user's browser and you are to respond to the user's message based on the selected text: ${selectedText}.`
+            : ""
+        }`,
       },
       ...conversationHistory,
-      { role: "user", content: message }
+      { role: "user", content: message },
     ];
 
     const completion = await openai.chat.completions.create({
@@ -26,9 +34,12 @@ export const generateResponse = async (message: string, conversationHistory: Mes
       model: "gpt-3.5-turbo",
     });
 
-    return completion.choices[0]?.message?.content || "I apologize, but I couldn't generate a response.";
+    return (
+      completion.choices[0]?.message?.content ??
+      "I apologize, but I couldn't generate a response."
+    );
   } catch (error) {
-    console.error('Error generating response:', error);
+    console.error("Error generating response:", error);
     return "I apologize, but I encountered an error while processing your request.";
   }
-}; 
+};
