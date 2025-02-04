@@ -48,3 +48,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   return true;
 });
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "ask-caret",
+    title: "Ask Caret",
+    contexts: ["selection"],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "ask-caret" && info.selectionText && tab?.id) {
+    try {
+      console.log("Adding selected text to local storage:", info.selectionText);
+      chrome.storage.local.set({
+        selectedText: info.selectionText,
+      });
+
+      chrome.sidePanel.open({ windowId: tab.windowId });
+    } catch (error) {
+      console.error("Error handling context menu click:", error);
+    }
+  }
+});

@@ -1,14 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "caret",
+  "name": "Caret",
   "version": "1.0.0",
-  "permissions": ["scripting", "activeTab", "tabs", "storage", "sidePanel"],
+  "icons": {
+    "16": "careticon.png",
+    "48": "careticon.png",
+    "128": "careticon.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "careticon.png"
+  },
+  "permissions": ["scripting", "activeTab", "tabs", "storage", "sidePanel", "contextMenus"],
   "background": {
     "service_worker": "serviceWorker.js",
     "type": "module"
-  },
-  "action": {
-    "default_popup": "index.html"
   },
   "host_permissions": ["<all_urls>"],
   "side_panel": {

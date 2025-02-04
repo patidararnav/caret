@@ -68,3 +68,16 @@ document.addEventListener("selectionchange", () => {
     });
   }
 });
+
+// Add message listener for ASK_CARET
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "ASK_CARET" && request.data?.text) {
+    console.log("Content script received ASK_CARET, forwarding to popup:", request.data.text);
+    // Forward the message to the popup
+    chrome.runtime.sendMessage({
+      action: "ASK_CARET",
+      data: { text: request.data.text }
+    });
+  }
+  return true;
+});
