@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Popup.css";
 import sendIcon from "../../assets/send_button.png";
 import caretLogo from "../../assets/caretlogo.png";
@@ -15,6 +15,18 @@ const Popup: React.FC = () => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedText, setSelectedText] = useState<string>("");
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Scroll when messages change or loading state changes
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +68,30 @@ const Popup: React.FC = () => {
       }
     };
     checkStoredText();
+
+    // Listen for storage changes
+    const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      if (changes.selectedText?.newValue) {
+        setSelectedText(changes.selectedText.newValue);
+        // Clear the storage after reading
+        chrome.storage.local.remove("selectedText");
+      }
+    };
+
+    // Listen for new selected text messages
+    const handleMessage = (request: any) => {
+      if (request.action === "NEW_SELECTED_TEXT" && request.data?.text) {
+        setSelectedText(request.data.text);
+      }
+    };
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    chrome.runtime.onMessage.addListener(handleMessage);
+    
+    return () => {
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+      chrome.runtime.onMessage.removeListener(handleMessage);
+    };
   }, []);
 
   return (
@@ -66,7 +102,7 @@ const Popup: React.FC = () => {
         </div>
       </header>
 
-      <div className="chat-container">
+      <div className="chat-container" ref={chatContainerRef}>
         {messages.map((message, index) => (
           <div
             key={index}
@@ -99,7 +135,16 @@ const Popup: React.FC = () => {
       <div className="bottom-container">
         {selectedText && (
           <div className="selected-text-container">
-            <div className="selected-text-content">{selectedText}</div>
+            <div className="selected-text-header">
+              <div className="selected-text-content">{selectedText}</div>
+              <button 
+                className="clear-text-button" 
+                onClick={() => setSelectedText("")}
+                aria-label="Clear selected text"
+              >
+                ×
+              </button>
+            </div>
           </div>
         )}
         <form onSubmit={handleSubmit} className="input-form">

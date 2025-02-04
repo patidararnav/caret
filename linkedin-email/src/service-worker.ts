@@ -57,15 +57,26 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "ask-caret" && info.selectionText && tab?.id) {
     try {
+      // First, open the side panel
+      await chrome.sidePanel.open({ windowId: tab.windowId });
+      
+      // Then store the selected text
       console.log("Adding selected text to local storage:", info.selectionText);
-      chrome.storage.local.set({
+      await chrome.storage.local.set({
         selectedText: info.selectionText,
       });
 
-      chrome.sidePanel.open({ windowId: tab.windowId });
+      // Add a small delay to ensure panel is open
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Send a message to notify that new text is available
+      chrome.runtime.sendMessage({
+        action: "NEW_SELECTED_TEXT",
+        data: { text: info.selectionText }
+      });
     } catch (error) {
       console.error("Error handling context menu click:", error);
     }
