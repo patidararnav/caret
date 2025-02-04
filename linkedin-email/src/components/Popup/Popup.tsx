@@ -1,14 +1,36 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Popup.css";
 import sendIcon from "../../assets/send_button.png";
 import caretLogo from "../../assets/caretlogo.png";
 import caretIcon from "../../assets/careticon.png";
 import { generateResponse } from "../../services/openai";
+import ReactMarkdown from "react-markdown";
+import "katex/dist/katex.min.css";
+import { InlineMath, BlockMath } from "react-katex";
 
 interface Message {
   role: "system" | "user" | "assistant";
   content: string;
 }
+
+// Custom renderer for ReactMarkdown to handle math blocks
+const MarkdownWithMath: React.FC<{ children: string }> = ({ children }) => {
+  const content = children
+    .split(/(\$\$.*?\$\$|\$.*?\$)/gs)
+    .map((chunk, index) => {
+      if (chunk.startsWith("$$") && chunk.endsWith("$$")) {
+        const math = chunk.slice(2, -2);
+        return <BlockMath key={index} math={math} />;
+      }
+      if (chunk.startsWith("$") && chunk.endsWith("$")) {
+        const math = chunk.slice(1, -1);
+        return <InlineMath key={index} math={math} />;
+      }
+      return chunk ? <ReactMarkdown key={index}>{chunk}</ReactMarkdown> : null;
+    });
+
+  return <>{content}</>;
+};
 
 const Popup: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -79,7 +101,9 @@ const Popup: React.FC = () => {
                 <img src={caretIcon} alt="Caret AI" className="ai-icon-image" />
               </div>
             )}
-            <div className="message-content">{message.content}</div>
+            <div className="message-content">
+              <MarkdownWithMath>{message.content}</MarkdownWithMath>
+            </div>
           </div>
         ))}
         {isLoading && (
