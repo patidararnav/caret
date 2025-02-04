@@ -68,15 +68,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       await chrome.storage.local.set({
         selectedText: info.selectionText,
       });
-
-      // Add a small delay to ensure panel is open
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      // Send a message to notify that new text is available
-      chrome.runtime.sendMessage({
-        action: "NEW_SELECTED_TEXT",
-        data: { text: info.selectionText }
-      });
+      
     } catch (error) {
       console.error("Error handling context menu click:", error);
     }

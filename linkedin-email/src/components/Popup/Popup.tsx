@@ -76,21 +76,12 @@ const Popup: React.FC = () => {
         // Clear the storage after reading
         chrome.storage.local.remove("selectedText");
       }
-    };
-
-    // Listen for new selected text messages
-    const handleMessage = (request: any) => {
-      if (request.action === "NEW_SELECTED_TEXT" && request.data?.text) {
-        setSelectedText(request.data.text);
-      }
-    };
+    }
 
     chrome.storage.onChanged.addListener(handleStorageChange);
-    chrome.runtime.onMessage.addListener(handleMessage);
     
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
-      chrome.runtime.onMessage.removeListener(handleMessage);
     };
   }, []);
 
